@@ -104,8 +104,8 @@ let can_cancel = ($sn = 440 && $aet5) ||
 
 [function canSpecialCancel() can_cancel]
 let can_WC = call canKaraCancel();
-let can_SC = call checkCancels(0);
-let can_SC = $can_SC || $can_WC;
+let can_SC2 = call checkCancels(0);
+let can_SC = $can_SC2 || $can_WC;
 let var22 = root, var(22);
 let can_cancel = $can_SC ||
 	($var22 = [1,2]) ||
@@ -115,17 +115,17 @@ let can_cancel = $can_SC ||
 	
 [function canSuperCancel() can_cancel]
 let can_WC = call canKaraCancel();
-let can_SC = call checkCancels(1);
-let can_SC = $can_SC || $can_WC;
+let can_SC2 = call checkCancels(1);
+let can_SC = $can_SC2 || $can_WC;
 let var22 = root, var(22);
 let can_cancel = $can_SC ||
-	($var22 = [1,2]) ||
+	($var22 = [1,3]) ||
 	(root,var(30)=1 && $var22=-1) ||
-	(root,var(47) && ($var22 = [3,5])) ||
+	root,var(47) ||
 	($var22=3 && root,var(43) && (root,var(50)%100000)=1);
 	
 [function powerLimiter() can_SC]
-let can_SC = power >= 1000 || (fVar(8)>0 && var(30)=6);
+let can_SC = (root,var(40)%1000) > 0 || (root,fVar(8) && root,var(30)=6) || root,var(47);
 let can_SC2 = call canSuperCancel();
 let can_SC = $can_SC && $can_SC2;
 
@@ -219,7 +219,6 @@ let can_chain = 0;
 let can_move = call canMove();
 let target_state_no = call predictState();
 let sn = root,stateNo;
-let can_move = call canMove();
 let chain_enabled = root,var(43) && (floor(root,var(50)/1000)%10)=1;
 
 if !$can_move {

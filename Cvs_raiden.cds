@@ -1294,7 +1294,7 @@ var(0)	 = 0
 [State -1, MapSet]
 type = MapSet
 trigger1 = map(tw_Buffer_ChangeStateNo) = [3000,3999]
-trigger1 = cond(var(30) !=6, power < 1000, !fvar(8))
+trigger1 = cond(var(30) !=6, power < 1000 && !var(47), !fvar(8))
 map = "tw_Buffer_ChangeStateNo"
 value = -1
 ignorehitpause = 1
@@ -1306,7 +1306,7 @@ type = SelfState										; for compatibility with Jesuszilla's pushback system
 value = Map(tw_Buffer_ChangeStateNo)
 triggerall = Map(tw_Buffer_ChangeStateNo) = [3000,3999]	; Super states
 triggerall = StateType != A && (var(40)%1000) != 0		; H" super condition
-trigger1   = Ctrl || StateNo=100 && animelemtime(2) >1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,3]) || var(47)&&(var(22)=[4,5]) || (var(22) = [-2,-1]) || (Time < 3 && (StateNo = [4000,4010]))
+trigger1   = Ctrl || StateNo=100 && animelemtime(2) >1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,3]) || var(47) || (var(22) = [-2,-1]) || (Time < 3 && (StateNo = [4000,4010]))
 trigger2   = Time < 4 && ((stateNo = [200,299]) || (stateNo = [400,499]))
 trigger3   = ((stateno%10000)=5001 || (stateno%10000)=5011 || stateno=151 || stateno=153 || stateno=140) && HitOver || stateno=5120 && AnimTime = 0
 trigger3   = (Var(0)=[1100,1300]) || (Var(0) = [2100,2300]) || (Var(0) = [3100,3300])
