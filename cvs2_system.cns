@@ -113,7 +113,6 @@ time = 1
 [State 0, Block]
 type = ChangeState
 triggerall = Ctrl
-triggerall = numHelper(10372)
 triggerall = map(h_Bk) > 0	; COMMAND = "/$B"
 trigger1 = InGuardDist
 value = 120

@@ -77,7 +77,7 @@ root,map(ya):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$a)>0);
 [function canMove() ret]
 let sn = root,stateNo;
 let ret = root, ctrl || ($sn=100 && root, animElemTime(2) > 1) ||
-	$sn=101 || $sn=40  || ($sn=52 && root, time >= 2);
+	$sn=101 || $sn=40  || ($sn=52 && root, time >= 2) || (root, moveContact=1 && root, var(47));
 
 # THIS IS MAINLY WHAT YOU WANT THAT MAKES SPECIAL CANCELS FEEL GOOD, DO THIS
 # AND YOU WON'T HAVE ANY PROBLEMS WITHOUT THAT "INPUT ASSIST" CRAP THAT SHOULD
@@ -219,7 +219,7 @@ let can_chain = 0;
 let can_move = call canMove();
 let target_state_no = call predictState();
 let sn = root,stateNo;
-let chain_enabled = root,var(43) && (floor(root,var(50)/1000)%10)=1;
+let chain_enabled = (root,var(43) && (floor(root,var(50)/1000)%10)=1);
 
 if !$can_move {
 	if $sn < 800 {
@@ -253,7 +253,7 @@ if !$can_move {
 			if $is_throw {
 				let can_chain = 0;
 			}
-			else if $is_ascending {
+			else if $is_ascending || root, var(47) {
 				let can_chain = $move_contact;
 			}
 			else {
@@ -307,7 +307,7 @@ if !$can_move {
 				if $is_throw {
 					let can_chain = 0;
 				}
-				else if $is_ascending {
+				else if $is_ascending || root, var(47) {
 					let can_chain = $move_contact;
 				}
 				else {
@@ -346,7 +346,7 @@ if !$can_move {
 			if $is_throw {
 				let can_chain = 0;
 			}
-			else if $is_ascending {
+			else if $is_ascending || root, var(47) {
 				let can_chain = $move_contact;
 			}
 		}
@@ -381,7 +381,7 @@ if !$can_move {
 			if $is_throw {
 				let can_chain = 0;
 			}
-			else if $is_ascending {
+			else if $is_ascending || root, var(47) {
 				let can_chain = $move_contact;
 			}
 		}
@@ -400,10 +400,8 @@ let can_move = call canMove();
 if $can_move {
 	let can_renda = 1;
 }
-else {
-	if $sn=400 && root,animElemTime(4) > 0 {
-		let can_renda = $target_state_no=400 || $target_state_no=235 || $target_state_no=230 || $target_state_no=200;
-	}
+else if $sn=400 && root,animElemTime(4) > 0 {
+	let can_renda = $target_state_no=400 || $target_state_no=235 || $target_state_no=230 || $target_state_no=200 || root, var(47);
 }
 
 [function bodyBlowFollowup() can_followup]
@@ -418,17 +416,17 @@ if ($sn=1100 && $aet7 < 7) ||
 }
 
 [function playerfunction()]
+# Disable charging during Custom Combo
+root, map(tw_NoCharge) := root,var(47)=1;
+
 ignoreHitPause if roundState=[2,3] && root,aiLevelF=0 {
 let state_no = -1;
 call buttonbuffer();
 
-# Disable charging during Custom Combo
-root, map(tw_NoCharge) := root,var(47)=1;
-
 #============================SUPERS============================
 if root, stateType != A {
 	# Destruction Drop
-	if root,map(tw_f720) || root,map(tw_r720) {
+	if (root,map(tw_f720) || root,map(tw_r720)) && $state_no < 0 {
 		let can_SC = call powerLimiter();
 		if root,map(c) {			
 			if $can_SC {
@@ -498,7 +496,7 @@ if root, stateType != A {
 		}
 	}
 	# Fire Breath
-	else if root,map(tw_HCBx2) {
+	if root,map(tw_HCBx2) && $state_no < 0 {
 		let can_SC = call powerLimiter();
 		if root,map(z) {			
 			if $can_SC {
@@ -550,7 +548,7 @@ if root, stateType != A {
 		}
 	}
 	# Crazy Train
-	else if root,map(tw_QCFQC) {
+	if root,map(tw_QCFQC) && $state_no < 0 {
 		let can_SC = call powerLimiter();
 		if root,map(z) {			
 			if $can_SC {
@@ -602,12 +600,14 @@ if root, stateType != A {
 		}
 	}
 #===========================SPECIALS===========================
+	let can_sp_cancel = call canSpecialCancel();
 	# Taunt
-	else if root,map(u_s) {
+	if root,map(u_s) && $state_no < 0 && $can_sp_cancel {
 		let state_no = 195;
 	}
 	# Thunder Crush Bomb
-	else if root,map(tw_f360) || root,map(tw_r360) {
+	if (root,map(tw_f360) || root,map(tw_r360)) && $state_no < 0 && $can_sp_cancel {
+		
 		if root,map(c) {
 			# Reset alike commands
 			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
@@ -616,9 +616,9 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 2;
+			root,map(tw_MoveStrength) := 2;
 		}
-		else if map(b) {
+		else if root,map(b) {
 			# Reset alike commands
 			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
 			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
@@ -626,7 +626,7 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 1;
+			root,map(tw_MoveStrength) := 1;
 		}
 		else if root,map(a) {
 			# Reset alike commands
@@ -636,7 +636,7 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 0;
+			root,map(tw_MoveStrength) := 0;
 		}
 		else if root,map(r_c) {
 			# Reset alike commands
@@ -646,7 +646,7 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 2;
+			root,map(tw_MoveStrength) := 2;
 		}
 		else if root,map(r_b) {
 			# Reset alike commands
@@ -656,7 +656,7 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 1;
+			root,map(tw_MoveStrength) := 1;
 		}
 		else if root,map(r_a) {
 			# Reset alike commands
@@ -666,11 +666,11 @@ if root, stateType != A {
 			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
 			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
 			let state_no = 1300;
-			root,root,map(tw_MoveStrength) := 0;
+			root,map(tw_MoveStrength) := 0;
 		}
 	}
 	# Poison Mist
-	else if root,map(tw_sHCB) {
+	if root,map(tw_sHCB) && $state_no < 0 && $can_sp_cancel {
 		if root,map(z) {
 			# Reset alike commands
 			map(i6321463214) := map(i63214) := map(i214) := 0;
@@ -715,7 +715,7 @@ if root, stateType != A {
 		}
 	}
 	# Combination Body Blow
-	else if root,map(tw_rDP) {
+	if root,map(tw_rDP) && $state_no < 0 && $can_sp_cancel {
 		if root,map(z) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
@@ -760,7 +760,7 @@ if root, stateType != A {
 		}
 	}
 	# Jumping Lariat Drop
-	else if root,map(tw_DP) {
+	if root,map(tw_DP) && $state_no < 0 && $can_sp_cancel {
 		if root,map(z) {
 			# Reset alike commands
 			map(i23623) := map(i623) := 0;
@@ -805,7 +805,7 @@ if root, stateType != A {
 		}
 	}
 	# Giant Bomb
-	else if root,map(tw_BF) {
+	if root,map(tw_BF) && $state_no < 0 && $can_sp_cancel {
 		if root,map(z) {
 			# Reset alike commands
 			map(i46) := 0;
@@ -849,48 +849,49 @@ if root, stateType != A {
 			root,map(tw_MoveStrength) := 0;
 		}
 	}
-	else if root,map(tw_QCB) {
+	# Body Blow Followups
+	if root,map(tw_QCB) && $state_no < 0 {
 		let is_followup = call bodyBlowFollowup();
 		
 		if $is_followup {
 			if root,map(c) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1250;
 				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(z) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1200;
 				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(b) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1250;
 				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(y) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1200;
 				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(a) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1250;
 				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(x) {
 				# Reset alike commands
-				map(i21421) := map(i214) := 0;
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1200;
 				root,root,map(tw_MoveStrength) := 2;
@@ -898,7 +899,7 @@ if root, stateType != A {
 		}
 	}
 #============================BASICS============================
-	else {
+	if $state_no < 0 {
 		# Crouching basics & Stomp
 		if root,map(h_Dn) {
 			# Stomp Kick
@@ -909,7 +910,7 @@ if root, stateType != A {
 				}
 			}
 			# Crouching Basics
-			else { 
+			if $state_no < 0 { 
 				let can_chain_or_move = call canChain();
 				let can_renda = call canRenda();
 				
@@ -953,23 +954,23 @@ if root, stateType != A {
 					let state_no = 250;
 				}
 				else if root,map(z) > 0 {
-					let state_no = cond(p2BodyDist X < 36 * (160.0/179.0), 225, 220);
+					let state_no = cond(root,p2BodyDist X < 36 * (160.0/179.0), 225, 220);
 				}
 				else if root,map(b) > 0 {
-					let state_no = cond(p2BodyDist X < 26 * (160.0/179.0), 245, 240);
+					let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 245, 240);
 				}
 				else if root,map(y) > 0 {
-					let state_no = cond(p2BodyDist X < 28 * (160.0/179.0), 215, 210);
+					let state_no = cond(root,p2BodyDist X < 28 * (160.0/179.0), 215, 210);
 				}
 				else if root,map(a) > 0 {
-					let state_no = cond(p2BodyDist X < 26 * (160.0/179.0), 235, 230);
+					let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 235, 230);
 				}
 				else if root,map(x) > 0 {
 					let state_no = 200;
 				}
 			}
 			else if $can_renda {
-				if root,map(a) && p2BodyDist X >= 26 * (160.0/179.0) {
+				if root,map(a) && root,p2BodyDist X >= 26 * (160.0/179.0) {
 					let state_no = 230;
 				}
 				else if root,map(x) {
@@ -989,7 +990,8 @@ else {
 		}
 		else if root,map(z) > 0 {
 			# Flying Body Press: hold D + HP
-			let state_no = cond(root,map(h_Dn), 710, 620);
+			let can_chain_body_press = call canChainBodyPress();
+			let state_no = cond(root,map(h_Dn) && $can_chain_body_press, 710, 620);
 		}
 		else if root,map(b) > 0 {
 			let state_no = 640;
@@ -1009,6 +1011,15 @@ else {
 root, map(tw_Buffer_ChangeStateNo) := $state_no;
 }
 
+[Statedef -4]
+if ishelper(const(ih)){
+	call setDist();
+}
+
+if !ishelper{
+	mapSet { map:"turncheck"; value: map(enemydx)<0 && (stateType=A || (stateNo=[4000,4010]) || isAsserted(NoTurnTarget) || enemyNear,isasserted(NoTurnTarget)) }
+}
+
 [Statedef +1]
 if ishelper(const(ih)){
 	call setDist();
@@ -1018,5 +1029,3 @@ if ishelper(const(ih)){
 else if map(tw_Buffer_ChangeStateNo) > -1 && stateNo = map(tw_Buffer_ChangeStateNo) && time=0 {
 	map(tw_Buffer_ChangeStateNo) := -1;
 }
-
-displayToClipboard { text: "map(tw_MoveStrength) = %d"; params: floor(map(tw_MoveStrength)); }
