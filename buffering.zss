@@ -1,0 +1,1023 @@
+[Function setDist()]
+
+let px= pos x;
+let eposx= enemynear,pos x;
+let rf = root,facing;
+
+let cgf =  root,const(size.ground.front);
+let ecgf = enemynear,const(size.ground.front);
+
+let caf = root,const(size.air.front);
+let ecaf = enemynear,const(size.air.front);
+
+let basedist = ($px - $eposx);
+
+root,map(enemydx):=$basedist *(-facing);
+
+if root,statetype!=A && enemynear,statetype!=A {
+root,map(enemybdx):=($basedist +($cgf+$ecgf)*$rf)*(-$rf);
+}
+
+if root,statetype=A && enemynear,statetype!=A {
+root,map(enemybdx):=($basedist +($caf+$ecgf)*$rf)*(-$rf);
+}
+
+if root,statetype!=A && enemynear,statetype=A {
+root,map(enemybdx):=($basedist +($cgf+$ecaf)*$rf)*(-$rf);
+}
+
+if root,statetype=A && enemynear,statetype=A {
+root,map(enemybdx):=($basedist +($caf+$ecaf)*$rf)*(-$rf);
+}
+
+[function buttonbuffer()]
+let x = Const(Bit10);
+let y = Const(Bit11);
+let z = Const(Bit12);
+let w = Const(Bit13);
+let s = Const(Bit14);
+let a = Const(Bit15);
+let b = Const(Bit16);
+let c = Const(Bit17);
+let d = Const(Bit18);
+let all = $x+$y+$z+$a+$b+$c+$d+$w+$s;
+
+if map(bufferred_frame){
+map(bufferred_frame):=map(bufferred_frame)-1;
+}
+else
+{
+root,map(xy):=0;
+root,map(ab):=0;
+root,map(xa):=0;
+root,map(yb):=0;
+root,map(ya):=0;
+}
+if (root,map(m_x)=$x||root,map(m_y)=$y||root,map(m_z)=$z||root,map(m_w)=$w||root,map(m_a)=$a||root,map(m_b)=$b||root,map(m_c)=$c||root,map(m_d)=$d||root,map(m_s)=$s)&&map(bufferred_frame)
+{
+
+root,map(xy):=((map(bufferred_button)&$x)>0&&(map(bufferred_button)&$y)>0);
+root,map(ab):=((map(bufferred_button)&$a)>0&&(map(bufferred_button)&$b)>0);
+root,map(xa):=((map(bufferred_button)&$x)>0&&(map(bufferred_button)&$a)>0);
+root,map(yb):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$b)>0);
+root,map(ya):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$a)>0);
+
+}
+
+if (root,map(m_x)>=$x||root,map(m_y)>=$y||root,map(m_z)>=$z||root,map(m_w)>=$w||root,map(m_a)>=$a||root,map(m_b)>=$b||root,map(m_c)>=$c||root,map(m_d)>=$d||root,map(m_s)>=$s)&&!map(bufferred_frame)
+{
+root,map(xy):=((map(bufferred_button)&$x)>0&&(map(bufferred_button)&$y)>0);
+root,map(ab):=((map(bufferred_button)&$a)>0&&(map(bufferred_button)&$b)>0);
+root,map(xa):=((map(bufferred_button)&$x)>0&&(map(bufferred_button)&$a)>0);
+root,map(yb):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$b)>0);
+root,map(ya):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$a)>0);
+
+}
+
+[function canMove() ret]
+let sn = root,stateNo;
+let ret = root, ctrl || ($sn=100 && root, animElemTime(2) > 1) ||
+	$sn=101 || $sn=40  || ($sn=52 && root, time >= 2);
+
+# THIS IS MAINLY WHAT YOU WANT THAT MAKES SPECIAL CANCELS FEEL GOOD, DO THIS
+# AND YOU WON'T HAVE ANY PROBLEMS WITHOUT THAT "INPUT ASSIST" CRAP THAT SHOULD
+# BE DISABLED TO PREVENT ANY TURTLEWAX LAG
+[function canKaraCancel() ret]
+let ret = call canMove();
+let sn = root,stateNo;
+let ret = $ret || (root,time < 4 && (root,stateNo = [200,299] || root,stateNo = [400,499]));
+
+[function checkCancels(isSuper) can_cancel]
+let sn = root,stateNo;
+let aet4 = root, animElemTime(4) < 0;
+let aet5 = root, animElemTime(5) < 0;
+let aet6 = root, animElemTime(6) < 0;
+let can_cancel = ($sn = 440 && $aet5) ||
+	($sn = 430 && $aet5) ||
+	($sn = 400 && $aet5) || 
+	($isSuper && $sn = 225 && $aet6) || 
+	($isSuper && $sn = 245 && $aet6) || 
+	($sn = 215 && $aet6) ||
+	($sn = 235 && $aet4) || 
+	($isSuper && $sn = 230 && $aet4) ||
+	($sn = 200 && $aet5);
+
+[function canSpecialCancel() can_cancel]
+let can_WC = call canKaraCancel();
+let can_SC = call checkCancels(0);
+let can_SC = $can_SC || $can_WC;
+let var22 = root, var(22);
+let can_cancel = $can_SC ||
+	($var22 = [1,2]) ||
+	(root,var(30)=1 && $var22=-1) ||
+	(root,var(47) && ($var22 = [3,5])) ||
+	($var22=3 && root,var(43) && (root,var(50)%100000)=1);
+	
+[function canSuperCancel() can_cancel]
+let can_WC = call canKaraCancel();
+let can_SC = call checkCancels(1);
+let can_SC = $can_SC || $can_WC;
+let var22 = root, var(22);
+let can_cancel = $can_SC ||
+	($var22 = [1,2]) ||
+	(root,var(30)=1 && $var22=-1) ||
+	(root,var(47) && ($var22 = [3,5])) ||
+	($var22=3 && root,var(43) && (root,var(50)%100000)=1);
+	
+[function powerLimiter() can_SC]
+let can_SC = power >= 1000 || (fVar(8)>0 && var(30)=6);
+let can_SC2 = call canSuperCancel();
+let can_SC = $can_SC && $can_SC2;
+
+[function determineState(heavy_press, heavy_rls, heavy_state, medium_press, medium_rls, medium_state, light_state) state_no]
+let var30 = root,var(30);
+let var40 = root,var(40);
+let state_no = cond(floor($var40/100)%10 = 1 && (($var30=1 && ($heavy_press > 0 || $heavy_rls > 0)) || $var30 != 1), $heavy_state, 
+	cond(floor($var40/10)%10 = 1 && ($medium_press > 0 || $medium_rls > 0), $medium_state, $light_state));
+	
+if $state_no = $heavy_state {
+	root,map(tw_MoveStrength) := 2;
+}
+else if $state_no = $medium_state {
+	root,map(tw_MoveStrength) := 1;
+}
+else {
+	root,map(tw_MoveStrength) := 0;
+}
+
+[function predictState() state_no]
+let state_no = -1;
+let is_air = root,stateType = A;
+
+if $is_air {
+	if root,map(c) > 0 {
+		let state_no = 650;
+	}
+	else if root,map(z) > 0 {
+		# Flying Body Press: hold D + HP
+		let state_no = cond(root,map(h_Dn), 710, 620);
+	}
+	else if root,map(b) > 0 {
+		let state_no = 640;
+	}
+	else if root,map(y) > 0 {
+		let state_no = 610;
+	}
+	else if root,map(a) > 0 {
+		let state_no = 630;
+	}
+	else if root,map(x) > 0 {
+		let state_no = 600;
+	}
+}
+else {
+	if root,map(h_Dn) > 0 {
+		if root,map(c) > 0 {
+			# Stomp Kick: hold DF + HK
+			let state_no = cond(root,map(h_Fd), 700, 450);
+		}
+		else if root,map(z) > 0 {
+			let state_no = 420;
+		}
+		else if root,map(b) > 0 {
+			let state_no = 440;
+		}
+		else if root,map(y) > 0 {
+			let state_no = 410;
+		}
+		else if root,map(a) > 0 {
+			let state_no = 430;
+		}
+		else if root,map(x) > 0 {
+			let state_no = 400;
+		}
+	}
+	else {
+		if root,map(c) > 0 {
+			let state_no = 250;
+		}
+		else if root,map(z) > 0 {
+			let state_no = cond(root,p2BodyDist X < 36 * (160.0/179.0), 225, 220);
+		}
+		else if root,map(b) > 0 {
+			let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 245, 240);
+		}
+		else if root,map(y) > 0 {
+			let state_no = cond(root,p2BodyDist X < 28 * (160.0/179.0), 215, 210);
+		}
+		else if root,map(a) > 0 {
+			let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 235, 230);
+		}
+		else if root,map(x) > 0 {
+			let state_no = 200;
+		}
+	}
+}
+
+[function canChain() can_chain]
+let can_chain = 0;
+let can_move = call canMove();
+let target_state_no = call predictState();
+let sn = root,stateNo;
+let can_move = call canMove();
+let chain_enabled = root,var(43) && (floor(root,var(50)/1000)%10)=1;
+
+if !$can_move {
+	if $sn < 800 {
+		if $target_state_no > -1 && $chain_enabled {
+			# Get the target stateNo info
+			let trgt_state_mod = $target_state_no%100;
+			# Get the current stateNo info
+			let curr_state_mod = $sn%100;
+			let is_ascending = 0;
+			
+			# Strength must be rising as a whole
+			if $trgt_state_mod = [50,69] {
+				let is_ascending = ($curr_state_mod = [0,29]) || ($curr_state_mod = [30,49]);
+			}
+			else if $trgt_state_mod = [40,49] {
+				let is_ascending = ($curr_state_mod = [10,19]) || ($curr_state_mod = [30,39]);
+			}
+			else if $trgt_state_mod = [30,39] {
+				let is_ascending = ($curr_state_mod = [0,9]);
+			}
+			else if $trgt_state_mod = [20,29] {
+				let is_ascending = ($curr_state_mod = [0,19]) || ($curr_state_mod = [30,49]);
+			}
+			else if $trgt_state_mod = [10,19] {
+				let is_ascending = ($curr_state_mod = [0,9]) || ($curr_state_mod = [30,39]);
+			}
+			
+			let move_contact = root,moveContact = 1;
+			let is_throw = root,hitDefAttr = SCA, NT, ST, HT;
+			
+			if $is_throw {
+				let can_chain = 0;
+			}
+			else if $is_ascending {
+				let can_chain = $move_contact;
+			}
+			else {
+				let can_chain = $sn = $target_state_no && $trgt_state_mod < 10 && $move_contact;
+			}
+		}
+	}
+}
+else {
+	let can_chain = 1;
+}
+
+[function canAirChain() can_chain]
+let can_chain = 0;
+let can_move = call canMove();
+let target_state_no = call predictState();
+let sn = root,stateNo;
+let can_move = call canMove();
+let chain_enabled = root,var(43) && (floor(root,var(50)/10000)%10)=1;
+
+if !$can_move {
+	if $sn < 800 {
+		if $target_state_no > -1 && $chain_enabled {
+			if $target_state_no < 700 && (floor($target_state_no/100)%2)=0 {
+				# Get the target stateNo info
+				let trgt_state_mod = $target_state_no%100;
+				# Get the current stateNo info
+				let curr_state_mod = $sn%100;
+				let is_ascending = 0;
+				
+				# Strength must be rising as a whole
+				if $trgt_state_mod = [50,69] {
+					let is_ascending = ($curr_state_mod = [0,29]) || ($curr_state_mod = [30,49]);
+				}
+				else if $trgt_state_mod = [40,49] {
+					let is_ascending = ($curr_state_mod = [10,19]) || ($curr_state_mod = [30,39]);
+				}
+				else if $trgt_state_mod = [30,39] {
+					let is_ascending = ($curr_state_mod = [0,9]);
+				}
+				else if $trgt_state_mod = [20,29] {
+					let is_ascending = ($curr_state_mod = [0,19]) || ($curr_state_mod = [30,49]);
+				}
+				else if $trgt_state_mod = [10,19] {
+					let is_ascending = ($curr_state_mod = [0,9]) || ($curr_state_mod = [30,39]);
+				}
+				
+				let move_contact = root,moveContact = 1;
+				let is_throw = root,hitDefAttr = SCA, NT, ST, HT;
+				
+				if $is_throw {
+					let can_chain = 0;
+				}
+				else if $is_ascending {
+					let can_chain = $move_contact;
+				}
+				else {
+					let can_chain = $sn = $target_state_no && $trgt_state_mod < 10 && $move_contact;
+				}
+			}
+		}
+	}
+}
+else {
+	let can_chain = 1;
+}
+
+[function canChainStomp() can_chain]
+let can_chain = 0;
+let can_move = call canMove();
+let target_state_no = call predictState();
+let sn = root,stateNo;
+let can_move = call canMove();
+let chain_enabled = root,var(43) && (floor(root,var(50)/1000)%10)=1;
+
+if !$can_move {
+	if $sn < 800 {
+		if $target_state_no = 700 && $chain_enabled {
+			# Get the target stateNo info
+			let target_state_mod = $target_state_no%100;
+			# Get the current stateNo info
+			let curr_state_mod = $sn%100;
+			let is_ascending = 0;
+			
+			# Strength must be rising as a whole
+			let is_ascending = ($curr_state_mod = [0,29]) || ($curr_state_mod = [30,49]);
+			let move_contact = root,moveContact = 1;
+			let is_throw = root,hitDefAttr = SCA, NT, ST, HT;
+			
+			if $is_throw {
+				let can_chain = 0;
+			}
+			else if $is_ascending {
+				let can_chain = $move_contact;
+			}
+		}
+	}
+}
+else {
+	let can_chain = 1;
+}
+
+[function canChainBodyPress() can_chain]
+let can_chain = 0;
+let can_move = call canMove();
+let target_state_no = call predictState();
+let sn = root,stateNo;
+let can_move = root,stateType=A && root,ctrl;
+let chain_enabled = root,var(43) && (floor(root,var(50)/10000)%10)=1;
+
+if !$can_move {
+	if $sn < 800 {
+		if $target_state_no = 710 && $chain_enabled {
+			# Get the target stateNo info
+			let target_state_mod = $target_state_no%100;
+			# Get the current stateNo info
+			let curr_state_mod = $sn%100;
+			let is_ascending = 0;
+			
+			# Strength must be rising as a whole
+			let is_ascending = ($curr_state_mod = [0,19]) || ($curr_state_mod = [30,49]);
+			let move_contact = root,moveContact = 1;
+			let is_throw = root,hitDefAttr = SCA, NT, ST, HT;
+			
+			if $is_throw {
+				let can_chain = 0;
+			}
+			else if $is_ascending {
+				let can_chain = $move_contact;
+			}
+		}
+	}
+}
+else {
+	let can_chain = 1;
+}
+
+[function canRenda() can_renda]
+let can_renda = 0;
+let target_state_no = call predictState();
+let sn = root, stateNo;
+let can_move = call canMove();
+
+if $can_move {
+	let can_renda = 1;
+}
+else {
+	if $sn=400 && root,animElemTime(4) > 0 {
+		let can_renda = $target_state_no=400 || $target_state_no=235 || $target_state_no=230 || $target_state_no=200;
+	}
+}
+
+[function bodyBlowFollowup() can_followup]
+let can_followup = 0;
+let sn = root,stateNo;
+let aet7 = root, animElemTime(7);
+
+if ($sn=1100 && $aet7 < 7) ||
+	($sn=1110 && $aet7 < 8) ||
+	($sn=1120 && $aet7 < 9) {
+	let can_followup = root,map(c) || root,map(b) || root,map(a) || root,map(z) || root,map(y) || root,map(x) || root,map(r_c) || root,map(r_b) || root,map(r_a) || root,map(r_z) || root,map(r_y) || root,map(r_x);
+}
+
+[function playerfunction()]
+ignoreHitPause if roundState=[2,3] && root,aiLevelF=0 {
+let state_no = -1;
+call buttonbuffer();
+
+# Disable charging during Custom Combo
+root, map(tw_NoCharge) := root,var(47)=1;
+
+#============================SUPERS============================
+if root, stateType != A {
+	# Destruction Drop
+	if root,map(tw_f720) || root,map(tw_r720) {
+		let can_SC = call powerLimiter();
+		if root,map(c) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+		else if root,map(b) {
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+		else if root,map(a) {
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+		else if root,map(r_c) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+		else if root,map(r_b) {
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+		else if root,map(r_a) {
+			if $can_SC {
+				# Reset alike commands
+				map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+				map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+				
+				map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+				map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+				let state_no = call determineState(root,map(c), root,map(r_c), 3220, root,map(b), root,map(r_b), 3210, 3200);
+			}
+		}
+	}
+	# Fire Breath
+	else if root,map(tw_HCBx2) {
+		let can_SC = call powerLimiter();
+		if root,map(z) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+		else if root,map(y) {
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+		else if root,map(x) {
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+		else if root,map(r_z) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+		else if root,map(r_y) {
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+		else if root,map(r_x) {
+			if $can_SC {
+				# Reset alike commands
+				map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3020, root,map(y), root,map(r_y), 3010, 3000);
+			}
+		}
+	}
+	# Crazy Train
+	else if root,map(tw_QCFQC) {
+		let can_SC = call powerLimiter();
+		if root,map(z) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+		else if root,map(y) {
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+		else if root,map(x) {
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+		else if root,map(r_z) {			
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+		else if root,map(r_y) {
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+		else if root,map(r_x) {
+			if $can_SC {
+				# Reset alike commands
+				map(i23623) := map(i236) := 0;
+
+				let state_no = call determineState(root,map(z), root,map(r_z), 3120, root,map(y), root,map(r_y), 3110, 3100);
+			}
+		}
+	}
+#===========================SPECIALS===========================
+	# Taunt
+	else if root,map(u_s) {
+		let state_no = 195;
+	}
+	# Thunder Crush Bomb
+	else if root,map(tw_f360) || root,map(tw_r360) {
+		if root,map(c) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 2;
+		}
+		else if map(b) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(a) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 0;
+		}
+		else if root,map(r_c) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(r_b) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(r_a) {
+			# Reset alike commands
+			map(i62486248) := map(i24862486) := map(i48624862) := map(i86248624) := 0;
+			map(i42684268) := map(i26842684) := map(i68426842) := map(i84268426) := 0;
+			
+			map(i6248) := map(i2486) := map(i4862) := map(i8624) := 0;
+			map(i4268) := map(i2684) := map(i6842) := map(i8426) := 0;
+			let state_no = 1300;
+			root,root,map(tw_MoveStrength) := 0;
+		}
+	}
+	# Poison Mist
+	else if root,map(tw_sHCB) {
+		if root,map(z) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1020;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(y) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1010;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(x) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1000;
+			root,map(tw_MoveStrength) := 0;
+		}
+		else if root,map(r_z) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1020;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(r_y) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1010;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(r_x) {
+			# Reset alike commands
+			map(i6321463214) := map(i63214) := map(i214) := 0;
+
+			let state_no = 1000;
+			root,map(tw_MoveStrength) := 0;
+		}
+	}
+	# Combination Body Blow
+	else if root,map(tw_rDP) {
+		if root,map(z) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1120;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(y) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1110;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(x) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1100;
+			root,map(tw_MoveStrength) := 0;
+		}
+		else if root,map(r_z) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1120;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(r_y) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1110;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(r_x) {
+			# Reset alike commands
+			map(i21421) := map(i421) := 0;
+
+			let state_no = 1100;
+			root,map(tw_MoveStrength) := 0;
+		}
+	}
+	# Jumping Lariat Drop
+	else if root,map(tw_DP) {
+		if root,map(z) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(y) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(x) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 0;
+		}
+		else if root,map(r_z) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(r_y) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(r_x) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1600;
+			root,map(tw_MoveStrength) := 0;
+		}
+	}
+	# Giant Bomb
+	else if root,map(tw_BF) {
+		if root,map(z) {
+			# Reset alike commands
+			map(i46) := 0;
+
+			let state_no = 1420;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(y) {
+			# Reset alike commands
+			map(i46) := 0;
+
+			let state_no = 1410;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(x) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1400;
+			root,map(tw_MoveStrength) := 0;
+		}
+		else if root,map(r_z) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1420;
+			root,map(tw_MoveStrength) := 2;
+		}
+		else if root,map(r_y) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1410;
+			root,map(tw_MoveStrength) := 1;
+		}
+		else if root,map(r_x) {
+			# Reset alike commands
+			map(i23623) := map(i623) := 0;
+
+			let state_no = 1400;
+			root,map(tw_MoveStrength) := 0;
+		}
+	}
+	else if root,map(tw_QCB) {
+		let is_followup = call bodyBlowFollowup();
+		
+		if $is_followup {
+			if root,map(c) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(z) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(b) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(y) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(a) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(x) {
+				# Reset alike commands
+				map(i21421) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,root,map(tw_MoveStrength) := 2;
+			}
+		}
+	}
+#============================BASICS============================
+	else {
+		# Crouching basics & Stomp
+		if root,map(h_Dn) {
+			# Stomp Kick
+			if root,map(h_Fd) {
+				let can_chain_or_move = call canChainStomp();
+				if $can_chain_or_move && root,map(c) {
+					let state_no = 700;
+				}
+			}
+			# Crouching Basics
+			else { 
+				let can_chain_or_move = call canChain();
+				let can_renda = call canRenda();
+				
+				if $can_chain_or_move {
+					if root,map(c) {
+						let state_no = 450;
+					}
+					else if root,map(z) {
+						let state_no = 420;
+					}
+					else if root,map(b) {
+						let state_no = 440;
+					}
+					else if root,map(y) {
+						let state_no = 410;
+					}
+					else if root,map(a) {
+						let state_no = 430;
+					}
+					else if root,map(x) {
+						let state_no = 400;
+					}
+				}
+				else if $can_renda {
+					if root,map(a) {
+						let state_no = 430;
+					}
+					else if root,map(x) {
+						let state_no = 400;
+					}
+				}
+			}
+		}
+		# Standing basics
+		else {
+			let can_chain_or_move = call canChain();
+			let can_renda = call canRenda();
+				
+			if $can_chain_or_move {
+				if root,map(c) > 0 {
+					let state_no = 250;
+				}
+				else if root,map(z) > 0 {
+					let state_no = cond(p2BodyDist X < 36 * (160.0/179.0), 225, 220);
+				}
+				else if root,map(b) > 0 {
+					let state_no = cond(p2BodyDist X < 26 * (160.0/179.0), 245, 240);
+				}
+				else if root,map(y) > 0 {
+					let state_no = cond(p2BodyDist X < 28 * (160.0/179.0), 215, 210);
+				}
+				else if root,map(a) > 0 {
+					let state_no = cond(p2BodyDist X < 26 * (160.0/179.0), 235, 230);
+				}
+				else if root,map(x) > 0 {
+					let state_no = 200;
+				}
+			}
+			else if $can_renda {
+				if root,map(a) && p2BodyDist X >= 26 * (160.0/179.0) {
+					let state_no = 230;
+				}
+				else if root,map(x) {
+					let state_no = 200;
+				}
+			}
+		}
+	}
+}
+# Air basics
+else {
+	let can_chain_or_move = call canAirChain();
+	
+	if $can_chain_or_move {
+		if root,map(c) > 0 {
+			let state_no = 650;
+		}
+		else if root,map(z) > 0 {
+			# Flying Body Press: hold D + HP
+			let state_no = cond(root,map(h_Dn), 710, 620);
+		}
+		else if root,map(b) > 0 {
+			let state_no = 640;
+		}
+		else if root,map(y) > 0 {
+			let state_no = 610;
+		}
+		else if root,map(a) > 0 {
+			let state_no = 630;
+		}
+		else if root,map(x) > 0 {
+			let state_no = 600;
+		}
+	}
+}
+
+root, map(tw_Buffer_ChangeStateNo) := $state_no;
+}
+
+[Statedef +1]
+if ishelper(const(ih)){
+	call setDist();
+	call playerfunction();
+}
+# Reset logic
+else if map(tw_Buffer_ChangeStateNo) > -1 && stateNo = map(tw_Buffer_ChangeStateNo) && time=0 {
+	map(tw_Buffer_ChangeStateNo) := -1;
+}
+
+displayToClipboard { text: "map(tw_MoveStrength) = %d"; params: floor(map(tw_MoveStrength)); }
