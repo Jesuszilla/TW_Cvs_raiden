@@ -92,12 +92,13 @@ let sn = root,stateNo;
 let aet4 = root, animElemTime(4) < 0;
 let aet5 = root, animElemTime(5) < 0;
 let aet6 = root, animElemTime(6) < 0;
+let aet7 = root, animElemTime(7) < 0;
 let can_cancel = ($sn = 440 && $aet5) ||
 	($sn = 430 && $aet5) ||
 	($sn = 400 && $aet5) || 
 	($isSuper && $sn = 225 && $aet6) || 
 	($isSuper && $sn = 245 && $aet6) || 
-	($sn = 215 && $aet6) ||
+	($sn = 215 && $aet7 || root, moveContact=1) ||
 	($sn = 235 && $aet4) || 
 	($isSuper && $sn = 230 && $aet4) ||
 	($sn = 200 && $aet5);
