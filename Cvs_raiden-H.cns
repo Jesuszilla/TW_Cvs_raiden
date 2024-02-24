@@ -12,6 +12,7 @@ physics = S
 anim = 3000
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State 3000,AfterImage]
 type = AfterImage
@@ -142,6 +143,7 @@ anim = 3000
 ctrl = 0
 velset = 0,0
 poweradd = -2000
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage
@@ -247,6 +249,7 @@ physics = S
 anim = 3000
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage
@@ -545,6 +548,7 @@ physics = S
 ctrl = 0
 anim = 3100
 velset = 0,0
+facep2 = 1
 
 [State 3000,AfterImage]
 type = AfterImage
@@ -873,6 +877,7 @@ ctrl = 0
 anim = 3110
 velset = 0,0
 poweradd = -2000
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage
@@ -1171,6 +1176,7 @@ physics = N
 ctrl = 0
 anim = 3120
 velset = 0,0
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage
@@ -1556,6 +1562,7 @@ physics = S
 anim = 3200
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State 3000,AfterImage]
 type = AfterImage
@@ -1718,6 +1725,7 @@ ctrl = 0
 velset = 0,0
 anim = 3210
 poweradd = -2000
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage
@@ -1855,6 +1863,7 @@ physics = S
 ctrl = 0
 velset = 0,0
 anim = 3220
+facep2 = 1
 
 [State 3100, AfterImage]
 type = AfterImage

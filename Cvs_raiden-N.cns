@@ -648,6 +648,7 @@ velset = 0,0
 anim = 200
 ctrl = 0
 poweradd = 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -746,6 +747,7 @@ velset = 0,0
 anim = 210
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -818,6 +820,7 @@ velset = 0,0
 anim = 215
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -891,6 +894,7 @@ velset = 0,0
 anim = 220
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -964,6 +968,7 @@ velset = 0,0
 anim = 225
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1037,6 +1042,7 @@ velset = 0,0
 anim = 230
 ctrl = 0
 poweradd = 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1110,6 +1116,7 @@ velset = 0,0
 anim = 235
 ctrl = 0
 poweradd = 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1183,6 +1190,7 @@ velset = 0,0
 anim = 240
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1256,6 +1264,7 @@ velset = 0,0
 anim = 245
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1329,6 +1338,7 @@ velset = 0,0
 anim = 250
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State 200,PlaySnd]
 type = PlaySnd
@@ -1417,6 +1427,7 @@ velset = 0,0
 anim = 400
 ctrl = 0
 poweradd = 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1490,6 +1501,7 @@ velset = 0,0
 anim = 410
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1563,6 +1575,7 @@ velset = 0,0
 anim = 420
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1671,6 +1684,7 @@ velset = 0,0
 anim = 430
 ctrl = 0
 poweradd = 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1736,6 +1750,7 @@ velset = 0,0
 anim = 440
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1801,6 +1816,7 @@ velset = 0,0
 anim = 450
 ctrl = 0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -2220,6 +2236,7 @@ ctrl = 0
 anim = 700
 velset = 0,0
 poweradd = floor(18*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet

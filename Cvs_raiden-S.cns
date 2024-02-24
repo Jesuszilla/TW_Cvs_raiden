@@ -13,6 +13,7 @@ poweradd = floor(72*fvar(5))
 anim = 1000
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -87,6 +88,7 @@ poweradd = floor(72*fvar(5))
 anim = 1000
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -161,6 +163,7 @@ poweradd = floor(72*fvar(5))
 anim = 1000
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -439,6 +442,7 @@ anim = 1100
 ctrl = 0
 velset = 0,0
 poweradd = floor(72*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -538,6 +542,7 @@ anim = 1110
 ctrl = 0
 velset = 0,0
 poweradd = floor(72*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -637,6 +642,7 @@ anim = 1120
 ctrl = 0
 velset = 0,0
 poweradd = floor(72*fvar(5))
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1105,6 +1111,7 @@ physics = S
 anim = 1300
 ctrl = 0
 velset = 0, 0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1595,6 +1602,7 @@ anim = 1400
 poweradd = floor(72*fvar(5))
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1705,6 +1713,7 @@ anim = 1410
 poweradd = floor(72*fvar(5))
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1815,6 +1824,7 @@ anim = 1420
 poweradd = floor(72*fvar(5))
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -1927,6 +1937,7 @@ poweradd = floor(72*fvar(5))
 anim = 1500
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State -2,VarSet]
 type = VarSet
@@ -2192,6 +2203,7 @@ poweradd = floor(72*fvar(5))
 anim = 1600
 ctrl = 0
 velset = 0,0
+facep2 = 1
 
 [State 1300,VarSet]
 type = VarSet
