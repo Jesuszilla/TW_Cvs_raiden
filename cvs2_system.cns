@@ -9610,12 +9610,6 @@ ignorehitpause = 1
 supermovetime = 9999999999999999
 pausemovetime = 9999999999999999
 persistent = 0
-
-[State -2, Combo]
-type = VarSet
-; for compatibility with Jesuszilla's pushback
-trigger1 = MoveType != H && Time > 1;(stateno%10000)!=5001 && (stateno%10000)!=5011 && stateno!=151 && stateno!=153 && stateno!=140 && stateno!=5120
-fvar(13) = 0
  
 ;-------------------------------------------------------------------
 ; ƒqƒbƒgŠÖ˜A 
@@ -9964,9 +9958,10 @@ fvar(39) = 1;CAPCOM VS SNK 2
 type = VarSet
 triggerall = numenemy
 triggerall = roundstate = 2
-trigger1 = enemy,authorname = "warusaki3" && enemy,fvar(39) = 1
-trigger2 = enemy,authorname = "mouser" && (P2Name = "Hibiki Takane" || P4Name = "Hibiki Takane")
-trigger3 = enemy,authorname = "Hh" && enemy,fvar(39) = 1
+trigger1 = enemy,cond(authorname = "warusaki3", fvar(39) = 1, 0)
+trigger2 = enemy,cond(authorname = "mouser", Name = "Hibiki Takane", 0)
+trigger3 = enemy,cond(authorname = "Hh", fvar(39) = 1, 0)
+trigger4 = enemy,cond(authorname = "Jesuszilla", (fvar(17) = [1,3]) || (fvar(17) = [5,6]), 0)
 fvar(2) = 1
 
 ;---------------------------------------------------------------------

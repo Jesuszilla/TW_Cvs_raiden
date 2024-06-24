@@ -1290,7 +1290,8 @@ var(0)	 = 0
 
 ;---------------------------------------------------------------------------
 ; State Correction
-; This is to prevent basics from coming out after throws.
+; This is to prevent supers from clogging the buffer when power is lost
+; suddenly.
 [State -1, MapSet]
 type = MapSet
 trigger1 = map(tw_Buffer_ChangeStateNo) = [3000,3999]
@@ -1306,9 +1307,10 @@ type = SelfState										; for compatibility with Jesuszilla's pushback system
 value = Map(tw_Buffer_ChangeStateNo)
 triggerall = Map(tw_Buffer_ChangeStateNo) = [3000,3999]	; Super states
 triggerall = StateType != A && (var(40)%1000) != 0		; H" super condition
-trigger1   = Ctrl || StateNo=100 && animelemtime(2) >1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,3]) || var(47) || (var(22) = [-2,-1]) || (Time < 3 && (StateNo = [4000,4010]))
+triggerall = !hitPauseTime
+trigger1   = Ctrl || StateNo=100 && animelemtime(2) >1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,3]) || var(47) || (var(22) = [-2,-1]) || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 trigger2   = Time < 4 && ((stateNo = [200,299]) || (stateNo = [400,499]))
-trigger3   = ((stateno%10000)=5001 || (stateno%10000)=5011 || stateno=151 || stateno=153 || stateno=140) && HitOver || stateno=5120 && AnimTime = 0
+trigger3   = ((stateno%10000)=5001 || (stateno%10000)=5011 || stateno=151 || stateno=153 || stateno=140 || stateno=5120) && map(tw_endstate_ctrl)
 trigger3   = (Var(0)=[1100,1300]) || (Var(0) = [2100,2300]) || (Var(0) = [3100,3300])
 ignorehitpause = 0
 
@@ -1326,11 +1328,12 @@ triggerall = !IsHelper
 triggerall = roundstate = 2
 triggerall = Map(tw_Buffer_ChangeStateNo) = 195 || (Map(tw_Buffer_ChangeStateNo) = [1000,2999])
 triggerall = statetype != A
-trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010]))
+triggerall = !hitPauseTime
+trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 trigger2   = Time < 4 && ((stateNo = [200,299]) || (stateNo = [400,499]))
 
 ; Reversals
-trigger3   = ((stateno%10000)=5001 || (stateno%10000)=5011 || stateno=151 || stateno=153 || stateno=140) && HitOver || stateno=5120 && AnimTime = 0
+trigger3   = ((stateno%10000)=5001 || (stateno%10000)=5011 || stateno=151 || stateno=153 || stateno=140 || stateno=5120) && map(tw_endstate_ctrl)
 trigger3   = var(0) >= 50 && var(0) < 100
 
 ; Combination Body Blow followups
@@ -1344,7 +1347,7 @@ type	   = ChangeState
 value	   = 1530
 triggerall = Var(16) > 2358 && Var(17) = 0
 triggerall = StateType != A
-trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1
+trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 
 ;---------------------------------------------------------------------
 [State -1,スーパードロップキック・3段階]
@@ -1352,7 +1355,7 @@ type	   = ChangeState
 value	   = 1520
 triggerall = (Var(16) = [1011,2358]) && Var(17) = 0
 triggerall = StateType != A
-trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1
+trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 
 ;---------------------------------------------------------------------
 [State -1,スーパードロップキック・2段階]
@@ -1360,7 +1363,7 @@ type	   = ChangeState
 value	   = 1510
 triggerall = (Var(16) = [337,1011]) && Var(17) =0
 triggerall = StateType != A
-trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1
+trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 
 ;---------------------------------------------------------------------
 [State -1,スーパードロップキック・1段階]
@@ -1368,7 +1371,7 @@ type	   = ChangeState
 value	   = 1500
 triggerall = (Var(16) = [42,337]) && Var(17) = 0
 triggerall = StateType != A
-trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1
+trigger1   = Ctrl || StateNo=100 && animelemtime(2)>1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,2]) || Var(30)=1&&var(22)=-1 || var(47)&&(var(22)=[3,5]) || var(22)=3&&var(43)&&floor(var(50)%100000)=1 || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 
 ;------------------------ ボタン押しフラグ1
 [State -1,Varadd(16)]
@@ -1455,7 +1458,7 @@ persistent = 0
 [State -1,回り込み]
 type	   = ChangeState
 value	   = 4000
-triggerall = (map(x) && map(a)) && StateType != A && ((Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101) || (var(47) && ((var(22)=[2,4]) || MoveContact && var(22)=5)))
+triggerall = (map(x) && map(a)) && StateType != A && ((Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101) || (var(47) && ((var(22)=[2,4]) || MoveContact && var(22)=5)) || map(tw_endstate_ctrl))
 trigger1   = (var(30)=1 || var(30)=2 || var(30)=5) && !var(43)
 trigger2   = var(43)&&floor(var(51)/10%10)=1
 trigger3   = var(43)&&floor(var(51)/10%10)=3 && Command = "holdfwd"
@@ -1464,7 +1467,7 @@ trigger3   = var(43)&&floor(var(51)/10%10)=3 && Command = "holdfwd"
 [State -1,避け]
 type	   = ChangeState
 value	   = 4010
-triggerall = (map(x) && map(a)) && StateType != A && (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101)
+triggerall = (map(x) && map(a)) && StateType != A && (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101 || map(tw_endstate_ctrl))
 trigger1   = var(30)=4 && !var(43)
 trigger2   = var(43)&&floor(var(51)/10%10)=2
 trigger3   = var(43)&&floor(var(51)/10%10)=3
@@ -1492,14 +1495,14 @@ TriggerAll = !Var(59)
 TriggerAll = map(h_c) > 0 && map(h_z) > 0 && fvar(8)!
 TriggerAll = statetype!= A && (var(30)=6 && fvar(37) <72 || var(30)=4 && fvar(37) <100 || var(30)!=4 && Power < 3000)
 TriggerAll	 = var(30)=4 || var(43)&&floor(var(50)/10000000%10)=1
-Trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101)
+Trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101) || map(tw_endstate_ctrl)
 
 ;---------------------------------------------------------------------
 [State -1,パワーMAX発動]
 type	   = ChangeState
 value	   = 4150
 TriggerAll = map(c) > 0 && map(z) > 0
-TriggerAll = statetype!= A && (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101)
+TriggerAll = statetype!= A && (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101 || map(tw_endstate_ctrl))
 Trigger1   = var(30)=5 && Power >= 1000 && fvar(8)!
 Trigger2   = var(30)=4 && floor(var(52)/10%10)=1 && fvar(8)=-1
 
@@ -1517,14 +1520,14 @@ type	   = ChangeState
 value	   = 4200
 triggerall = map(c) > 0 && map(z) > 0
 triggerall = statetype != A && var(30)=2 && Power >= 3000 && fvar(8)!
-trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101)
+trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101 || map(tw_endstate_ctrl))
 
 [State -1,オリコン発動（空中）]
 type	   = ChangeState
 value	   = 4210
 triggerall = map(c) > 0 && map(z) > 0
 triggerall = statetype = A && var(30)=2 && Power >= 3000 && fvar(8)!
-trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101)
+trigger1   = (Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101 || map(tw_endstate_ctrl))
 
 ;---------------------------------------------------------------------
 [State -1,ガードキャンセル攻撃]
@@ -1558,6 +1561,7 @@ trigger2   = (var(30)=3 && Power>=3000) || (var(30)=6 && Fvar(8))
 [State -1, MapSet]
 type = MapSet
 trigger1 = StateType != A && Map(tw_Buffer_ChangeStateNo) = 710
+trigger2 = GetHitVar(IsBound) || GetHitVar(HitTime) > 0
 map = "tw_Buffer_ChangeStateNo"
 value = -1
 ignorehitpause = 1
@@ -1591,6 +1595,8 @@ triggerall = !IsHelper
 triggerall = roundstate = 2
 triggerall = StateNo != [800,899]
 triggerall = MoveType != H
+triggerall = !hitPauseTime
+triggerall = Ctrl || map(tw_endstate_ctrl) || map(tw_can_renda)
 trigger1 = Map(tw_Buffer_ChangeStateNo) = [200,299]
 trigger2 = Map(tw_Buffer_ChangeStateNo) = [400,499]
 trigger3 = Map(tw_Buffer_ChangeStateNo) = [600,699]

@@ -77,7 +77,7 @@ root,map(ya):=((map(bufferred_button)&$y)>0&&(map(bufferred_button)&$a)>0);
 [function canMove() ret]
 let sn = root,stateNo;
 let ret = root, ctrl || ($sn=100 && root, animElemTime(2) > 1) ||
-	$sn=101 || $sn=40  || ($sn=52 && root, time >= 2) || (root, moveContact=1 && root, var(47));
+	$sn=101 || $sn=40  || ($sn=52 && root, time >= 2) || (root, moveContact=1 && root, var(47)) || root,map(tw_endstate_ctrl);
 
 # THIS IS MAINLY WHAT YOU WANT THAT MAKES SPECIAL CANCELS FEEL GOOD, DO THIS
 # AND YOU WON'T HAVE ANY PROBLEMS WITHOUT THAT "INPUT ASSIST" CRAP THAT SHOULD
@@ -393,16 +393,12 @@ else {
 }
 
 [function canRenda() can_renda]
-let can_renda = 0;
+let can_renda = call canMove();
 let target_state_no = call predictState();
 let sn = root, stateNo;
-let can_move = call canMove();
 
-if $can_move {
-	let can_renda = 1;
-}
-else if $sn=400 && root,animElemTime(4) > 0 {
-	let can_renda = $target_state_no=400 || $target_state_no=235 || $target_state_no=230 || $target_state_no=200 || root, var(47);
+if $sn=400 && root,animElemTime(4) > 0 {
+	let can_renda = $can_renda || $target_state_no=400 || $target_state_no=235 || $target_state_no=230 || $target_state_no=200 || root, var(47);
 }
 
 [function bodyBlowFollowup() can_followup]
@@ -416,9 +412,28 @@ if ($sn=1100 && $aet7 < 7) ||
 	let can_followup = root,map(c) || root,map(b) || root,map(a) || root,map(z) || root,map(y) || root,map(x) || root,map(r_c) || root,map(r_b) || root,map(r_a) || root,map(r_z) || root,map(r_y) || root,map(r_x);
 }
 
+[function end_state(st) r]
+	let r = 0;
+if 0 {
+}
+else if root, moveType = H && root, stateType != A {
+	let r = root,gethitvar(hittime)<=0;
+} 
+else if root,movetype!=H || $st = 5210 && stateType != A {
+	if ($st != [1500,1530] && $st != [1310,1315] && $st != 1600) || $st = 1505 {
+		let r = root, cond(moveType = A, animTime >= -1, animTime >= 0);
+	}
+}
+
 [function playerfunction()]
 # Disable charging during Custom Combo
 root, map(tw_NoCharge) := root,var(47)=1;
+
+# Call endstate if necessary
+if !isHelper {
+	let ctrl = call end_state(stateNo);
+	map(tw_endstate_ctrl) := $ctrl;
+}
 
 ignoreHitPause if roundState=[2,3] && root,aiLevelF=0 {
 let state_no = -1;
@@ -720,6 +735,7 @@ if root, stateType != A {
 		if root,map(z) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1120;
 			root,map(tw_MoveStrength) := 2;
@@ -727,6 +743,7 @@ if root, stateType != A {
 		else if root,map(y) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1110;
 			root,map(tw_MoveStrength) := 1;
@@ -734,6 +751,7 @@ if root, stateType != A {
 		else if root,map(x) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1100;
 			root,map(tw_MoveStrength) := 0;
@@ -741,6 +759,7 @@ if root, stateType != A {
 		else if root,map(r_z) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1120;
 			root,map(tw_MoveStrength) := 2;
@@ -748,6 +767,7 @@ if root, stateType != A {
 		else if root,map(r_y) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1110;
 			root,map(tw_MoveStrength) := 1;
@@ -755,6 +775,7 @@ if root, stateType != A {
 		else if root,map(r_x) {
 			# Reset alike commands
 			map(i21421) := map(i421) := 0;
+			map(i214) := 0;
 
 			let state_no = 1100;
 			root,map(tw_MoveStrength) := 0;
@@ -914,6 +935,7 @@ if root, stateType != A {
 			if $state_no < 0 { 
 				let can_chain_or_move = call canChain();
 				let can_renda = call canRenda();
+				root, map(tw_can_renda) := $can_renda;
 				
 				if $can_chain_or_move {
 					if root,map(c) {
@@ -934,8 +956,7 @@ if root, stateType != A {
 					else if root,map(x) {
 						let state_no = 400;
 					}
-				}
-				else if $can_renda {
+				} else if root, map(tw_can_renda) {
 					if root,map(a) {
 						let state_no = 430;
 					}
@@ -1009,7 +1030,9 @@ else {
 	}
 }
 
-root, map(tw_Buffer_ChangeStateNo) := $state_no;
+if $state_no > 0 {
+	root, map(tw_Buffer_ChangeStateNo) := $state_no;
+}
 }
 
 [Statedef -4]
@@ -1030,3 +1053,9 @@ if ishelper(const(ih)){
 else if map(tw_Buffer_ChangeStateNo) > -1 && stateNo = map(tw_Buffer_ChangeStateNo) && time=0 {
 	map(tw_Buffer_ChangeStateNo) := -1;
 }
+
+if moveType != H && fvar(13) && Time > 0 {
+	fvar(13) := 0;
+}
+
+#displayToClipboard {text: "map(m_d) = %d"; params: floor(Map(m_d)); }
