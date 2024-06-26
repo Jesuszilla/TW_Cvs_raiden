@@ -1562,6 +1562,7 @@ trigger2   = (var(30)=3 && Power>=3000) || (var(30)=6 && Fvar(8))
 type = MapSet
 trigger1 = StateType != A && Map(tw_Buffer_ChangeStateNo) = 710
 trigger2 = GetHitVar(IsBound) || GetHitVar(HitTime) > 0
+trigger3 = RoundState < 2
 map = "tw_Buffer_ChangeStateNo"
 value = -1
 ignorehitpause = 1

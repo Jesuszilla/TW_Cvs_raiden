@@ -918,6 +918,48 @@ if root, stateType != A {
 				let state_no = 1200;
 				root,root,map(tw_MoveStrength) := 2;
 			}
+			else if root,map(r_c) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(r_z) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(r_b) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(r_y) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(r_a) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1250;
+				root,map(tw_MoveStrength) := 2;
+			}
+			else if root,map(r_x) {
+				# Reset alike commands
+				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
+
+				let state_no = 1200;
+				root,root,map(tw_MoveStrength) := 2;
+			}
 		}
 	}
 #============================BASICS============================
@@ -938,29 +980,29 @@ if root, stateType != A {
 				root, map(tw_can_renda) := $can_renda;
 				
 				if $can_chain_or_move {
-					if root,map(c) {
+					if root,map(u_c) {
 						let state_no = 450;
 					}
-					else if root,map(z) {
+					else if root,map(u_z) {
 						let state_no = 420;
 					}
-					else if root,map(b) {
+					else if root,map(u_b) {
 						let state_no = 440;
 					}
-					else if root,map(y) {
+					else if root,map(u_y) {
 						let state_no = 410;
 					}
-					else if root,map(a) {
+					else if root,map(u_a) {
 						let state_no = 430;
 					}
-					else if root,map(x) {
+					else if root,map(u_x) {
 						let state_no = 400;
 					}
 				} else if root, map(tw_can_renda) {
-					if root,map(a) {
+					if root,map(u_a) {
 						let state_no = 430;
 					}
-					else if root,map(x) {
+					else if root,map(u_x) {
 						let state_no = 400;
 					}
 				}
@@ -972,30 +1014,30 @@ if root, stateType != A {
 			let can_renda = call canRenda();
 				
 			if $can_chain_or_move {
-				if root,map(c) > 0 {
+				if root,map(u_c) > 0 {
 					let state_no = 250;
 				}
-				else if root,map(z) > 0 {
+				else if root,map(u_z) > 0 {
 					let state_no = cond(root,p2BodyDist X < 36 * (160.0/179.0), 225, 220);
 				}
-				else if root,map(b) > 0 {
+				else if root,map(u_b) > 0 {
 					let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 245, 240);
 				}
-				else if root,map(y) > 0 {
+				else if root,map(u_y) > 0 {
 					let state_no = cond(root,p2BodyDist X < 28 * (160.0/179.0), 215, 210);
 				}
-				else if root,map(a) > 0 {
+				else if root,map(u_a) > 0 {
 					let state_no = cond(root,p2BodyDist X < 26 * (160.0/179.0), 235, 230);
 				}
-				else if root,map(x) > 0 {
+				else if root,map(u_x) > 0 {
 					let state_no = 200;
 				}
 			}
 			else if $can_renda {
-				if root,map(a) && root,p2BodyDist X >= 26 * (160.0/179.0) {
+				if root,map(u_a) && root,p2BodyDist X >= 26 * (160.0/179.0) {
 					let state_no = 230;
 				}
-				else if root,map(x) {
+				else if root,map(u_x) {
 					let state_no = 200;
 				}
 			}
@@ -1007,31 +1049,35 @@ else {
 	let can_chain_or_move = call canAirChain();
 	
 	if $can_chain_or_move {
-		if root,map(c) > 0 {
+		if root,map(u_c) > 0 {
 			let state_no = 650;
 		}
-		else if root,map(z) > 0 {
+		else if root,map(u_z) > 0 {
 			# Flying Body Press: hold D + HP
 			let can_chain_body_press = call canChainBodyPress();
 			let state_no = cond(root,map(h_Dn) && $can_chain_body_press, 710, 620);
 		}
-		else if root,map(b) > 0 {
+		else if root,map(u_b) > 0 {
 			let state_no = 640;
 		}
-		else if root,map(y) > 0 {
+		else if root,map(u_y) > 0 {
 			let state_no = 610;
 		}
-		else if root,map(a) > 0 {
+		else if root,map(u_a) > 0 {
 			let state_no = 630;
 		}
-		else if root,map(x) > 0 {
+		else if root,map(u_x) > 0 {
 			let state_no = 600;
 		}
 	}
 }
 
-if $state_no > 0 {
+# Fix errors with system states
+if $state_no > 0 && root, stateNo != [4000,4200] {
 	root, map(tw_Buffer_ChangeStateNo) := $state_no;
+} else if root, cond(stateNo = [4000,4200], Time = [0,1], RoundState < 2) {
+	root, map(tw_Buffer_ChangeStateNo) := -1;
+	let state_no = -1;
 }
 }
 
