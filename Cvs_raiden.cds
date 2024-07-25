@@ -1461,7 +1461,7 @@ value	   = 4000
 triggerall = (map(x) && map(a)) && StateType != A && ((Ctrl || Time < 2 && (stateno=[200,799]) || StateNo=100 && animelemtime(2) >1 || StateNo=101) || (var(47) && ((var(22)=[2,4]) || MoveContact && var(22)=5)) || map(tw_endstate_ctrl))
 trigger1   = (var(30)=1 || var(30)=2 || var(30)=5) && !var(43)
 trigger2   = var(43)&&floor(var(51)/10%10)=1
-trigger3   = var(43)&&floor(var(51)/10%10)=3 && Command = "holdfwd"
+trigger3   = var(43)&&floor(var(51)/10%10)=3 && map(h_Fd)
 
 ;---------------------------------------------------------------------
 [State -1,”ð‚¯]
@@ -1558,7 +1558,7 @@ trigger2   = (var(30)=3 && Power>=3000) || (var(30)=6 && Fvar(8))
 ; This is to prevent bad things from happening when the state is set to an
 ; air state immediately upon landing. You can either force it to a ground
 ; basic or just null it out completely by setting it to -1.
-[State -1, MapSet]
+[State -1, Reset]
 type = MapSet
 trigger1 = StateType != A && Map(tw_Buffer_ChangeStateNo) = 710
 trigger2 = GetHitVar(IsBound) || GetHitVar(HitTime) > 0
@@ -1566,11 +1566,17 @@ trigger3 = RoundState < 2
 map = "tw_Buffer_ChangeStateNo"
 value = -1
 ignorehitpause = 1
-[State -1, MapSet]
+[State -1, Correct offset air basics]
 type = MapSet
 trigger1 = StateType != A && (Map(tw_Buffer_ChangeStateNo) = [600,699])
 map = "tw_Buffer_ChangeStateNo"
 value = Map(tw_Buffer_ChangeStateNo)-cond(Map(h_Dn),200,400)	; or -1, depending on your use case
+ignorehitpause = 1
+[State -1, Correct offset ground basics]
+type = MapSet
+trigger1 = (StateType = A || pos Y < 0) && (Map(tw_Buffer_ChangeStateNo) = [200,499])
+map = "tw_Buffer_ChangeStateNo"
+value = cond(map(h_Dn) && Map(tw_Buffer_ChangeStateNo)%100 = [20,25], 710, (Map(tw_Buffer_ChangeStateNo)%100) - (Map(tw_Buffer_ChangeStateNo)%10) + 600)
 ignorehitpause = 1
 
 ;---------------------------------------------------------------------------

@@ -1,33 +1,40 @@
 [Function setDist()]
-
-let px= pos x;
-let eposx= enemynear,pos x;
+##used to detect nearest actual opponent
+let px=  root,pos x;
+let eposx= p2,pos x;
 let rf = root,facing;
 
-let cgf =  root,const(size.ground.front);
-let ecgf = enemynear,const(size.ground.front);
+let cgf =   root,const(size.ground.front);
+let cgb =   root,const(size.ground.back);
+let ecgf = p2,const(size.ground.front);
+let ecgb = p2,const(size.ground.back);
 
-let caf = root,const(size.air.front);
-let ecaf = enemynear,const(size.air.front);
+let caf =  root,const(size.air.front);
+let ecaf = p2,const(size.air.front);
+let ecab = p2,const(size.air.back);
+
+
 
 let basedist = ($px - $eposx);
+if roundstate!=4||!root,alive
+{
+ root,map(enemydx):=$basedist *(-root,facing);
 
-root,map(enemydx):=$basedist *(-facing);
-
-if root,statetype!=A && enemynear,statetype!=A {
-root,map(enemybdx):=($basedist +($cgf+$ecgf)*$rf)*(-$rf);
+if  root,statetype!=A && p2,statetype!=A {
+ root,map(enemybdx):=($basedist +($cgf+$ecgf)*$rf)*(-$rf);
 }
 
-if root,statetype=A && enemynear,statetype!=A {
-root,map(enemybdx):=($basedist +($caf+$ecgf)*$rf)*(-$rf);
+if  root,statetype=A && p2,statetype!=A {
+ root,map(enemybdx):=($basedist +(($caf+$ecgf)*cond( root,map(enemydx)<0,0,$rf)))*(-$rf);
 }
 
-if root,statetype!=A && enemynear,statetype=A {
-root,map(enemybdx):=($basedist +($cgf+$ecaf)*$rf)*(-$rf);
+if  root,statetype!=A && p2,statetype=A {
+ root,map(enemybdx):=($basedist +(($cgf+$ecaf)*cond( root,map(enemydx)<0,0,$rf)))*(-$rf);
 }
 
-if root,statetype=A && enemynear,statetype=A {
-root,map(enemybdx):=($basedist +($caf+$ecaf)*$rf)*(-$rf);
+if  root,statetype=A && p2,statetype=A {
+ root,map(enemybdx):=($basedist +($caf+$ecaf)*$rf)*(-$rf);
+}
 }
 
 [function buttonbuffer()]
@@ -148,7 +155,7 @@ else {
 
 [function predictState() state_no]
 let state_no = -1;
-let is_air = root,stateType = A;
+let is_air = root,stateType = A || root, cond(1, Pos Y + Vel Y < 0, 0);
 
 if $is_air {
 	if root,map(c) > 0 {
@@ -440,7 +447,7 @@ let state_no = -1;
 call buttonbuffer();
 
 #============================SUPERS============================
-if root, stateType != A {
+if root, stateType != A && root, pos Y = 0 {
 	# Destruction Drop
 	if (root,map(tw_f720) || root,map(tw_r720)) && $state_no < 0 {
 		let can_SC = call powerLimiter();
@@ -916,7 +923,7 @@ if root, stateType != A {
 				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1200;
-				root,root,map(tw_MoveStrength) := 2;
+				root,map(tw_MoveStrength) := 2;
 			}
 			else if root,map(r_c) {
 				# Reset alike commands
@@ -958,12 +965,13 @@ if root, stateType != A {
 				map(i21421) := map(i6321463214) := map(i63214) := map(i214) := 0;
 
 				let state_no = 1200;
-				root,root,map(tw_MoveStrength) := 2;
+				root,map(tw_MoveStrength) := 2;
 			}
 		}
 	}
 #============================BASICS============================
-	if $state_no < 0 {
+	# Don't do basics if we're trying to roll or dodge (except during the dodge window)
+	if $state_no < 0 && root, cond(stateNo = 4010, Time = [14,24], !(map(x) && map(a) && ((var(43)&&floor(var(51)/10%10)=[1,3]) || (var(30)!=3 && var(30)!=6 && !var(43))))) {
 		# Crouching basics & Stomp
 		if root,map(h_Dn) {
 			# Stomp Kick
@@ -1072,12 +1080,9 @@ else {
 	}
 }
 
-# Fix errors with system states
-if $state_no > 0 && root, stateNo != [4000,4200] {
+# Change states only if it's set
+if $state_no > 0 {
 	root, map(tw_Buffer_ChangeStateNo) := $state_no;
-} else if root, cond(stateNo = [4000,4200], Time = [0,1], RoundState < 2) {
-	root, map(tw_Buffer_ChangeStateNo) := -1;
-	let state_no = -1;
 }
 }
 
@@ -1087,7 +1092,7 @@ if ishelper(const(ih)){
 }
 
 if !ishelper{
-	mapSet { map:"turncheck"; value: map(enemydx)<0 && (stateType=A || (stateNo=[4000,4010]) || isAsserted(NoTurnTarget) || enemyNear,isasserted(NoTurnTarget)) }
+	map(turncheck) := map(enemydx)<0 && (stateType=A || (stateNo=[4000,4010]) || isAsserted(NoTurnTarget) || enemyNear,isasserted(NoTurnTarget));
 }
 
 [Statedef +1]

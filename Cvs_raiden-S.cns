@@ -300,7 +300,7 @@ pos = 110,-100
 
 [State 1321, HitDef]
 type = Projectile
-triggerall = var(25) < 1
+triggerall = root, var(25) < 1
 trigger1 = Time > var(2)
 attr = S, SP
 projid = 1000
