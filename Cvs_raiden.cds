@@ -1307,6 +1307,7 @@ type = SelfState										; for compatibility with Jesuszilla's pushback system
 value = Map(tw_Buffer_ChangeStateNo)
 triggerall = Map(tw_Buffer_ChangeStateNo) = [3000,3999]	; Super states
 triggerall = StateType != A && (var(40)%1000) != 0		; H" super condition
+triggerall = !IsHelper
 triggerall = !hitPauseTime
 trigger1   = Ctrl || StateNo=100 && animelemtime(2) >1 || StateNo=101 || StateNo=40 || StateNo=52 && Time>=2 || (var(22)=[1,3]) || var(47) || (var(22) = [-2,-1]) || (Time < 3 && (StateNo = [4000,4010])) || map(tw_endstate_ctrl)
 trigger2   = Time < 4 && ((stateNo = [200,299]) || (stateNo = [400,499]))

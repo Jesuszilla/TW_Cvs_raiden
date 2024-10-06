@@ -426,7 +426,7 @@ if 0 {
 else if root, moveType = H && root, stateType != A {
 	let r = root,gethitvar(hittime)<=0;
 } 
-else if root,movetype!=H || $st = 5210 && stateType != A {
+else if (root,movetype!=H || $st = 5210 && stateType != A) && root, cond(numTarget, !target, getHitVar(isBound), 1)  {
 	if ($st != [1500,1530] && $st != [1310,1315] && $st != 1600) || $st = 1505 {
 		let r = root, cond(moveType = A, animTime >= -1, animTime >= 0);
 	}
